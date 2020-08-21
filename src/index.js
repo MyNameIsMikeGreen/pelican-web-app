@@ -2,9 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const HOST = 'http://192.168.5.101:8000';   // TODO: Variable host
+const STATUS_ENDPOINT = HOST + '/status';
+const ACTIVATE_ENDPOINT = HOST + '/actions/activate';
+const DEACTIVATE_ENDPOINT = HOST + '/actions/deactivate';
+const RESCAN_ENDPOINT = HOST + '/actions/rescan';
+
 class Main extends React.Component {
 
-    status = setInterval(() =>  {fetch('http://192.168.5.101:8000/status')
+    status = setInterval(() =>  {fetch(STATUS_ENDPOINT)
         .then(response => response.json())
         .then(data => this.setState({ status: data.status }))
         .catch((error) => console.error(error));}, 1000);
@@ -16,12 +22,16 @@ class Main extends React.Component {
         };
     }
 
-    render() {
+    render() {  // TODO: Deactivate buttons based on status
         return (
             <>
                 <h1>Status: {this.state.status}</h1>
+                <br />
                 <ActionButton label={"ACTIVATE"} action={() => actionActivate()}/>
+                <br />
                 <ActionButton label={"DEACTIVATE"} action={() => actionDeactivate()}/>
+                <br />
+                <ActionButton label={"RESCAN"} action={() => actionRescan()}/>
             </>
         );
     }
@@ -36,11 +46,22 @@ class ActionButton extends React.Component {
 }
 
 function actionActivate() {
-    alert("Activated!")
+    executeAndLogGetRequest(ACTIVATE_ENDPOINT + '?timeout_seconds=600'); // TODO: Variable timeout
 }
 
 function actionDeactivate() {
-    alert("Deactivated!")
+    executeAndLogGetRequest(DEACTIVATE_ENDPOINT);
+}
+
+function actionRescan() {
+    executeAndLogGetRequest(RESCAN_ENDPOINT);
+}
+
+function executeAndLogGetRequest(url) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => console.error(error));
 }
 
 // ========================================
