@@ -22,16 +22,16 @@ class Main extends React.Component {
         };
     }
 
-    render() {  // TODO: Deactivate buttons based on status
+    render() {
         return (
             <>
                 <h1>Status: {this.state.status}</h1>
                 <br />
-                <ActionButton label={"ACTIVATE"} action={() => actionActivate()}/>
+                <ActionButton label={"ACTIVATE"} action={() => actionActivate()} disabled={this.state.status !== 'DEACTIVATED'}/>
                 <br />
-                <ActionButton label={"DEACTIVATE"} action={() => actionDeactivate()}/>
+                <ActionButton label={"DEACTIVATE"} action={() => actionDeactivate()} disabled={this.state.status !== 'ACTIVATED'}/>
                 <br />
-                <ActionButton label={"RESCAN"} action={() => actionRescan()}/>
+                <ActionButton label={"RESCAN"} action={() => actionRescan()} disabled={this.state.status !== 'ACTIVATED'}/>
             </>
         );
     }
@@ -40,7 +40,7 @@ class Main extends React.Component {
 class ActionButton extends React.Component {
     render() {
         return (
-            <button onClick={this.props.action}>{this.props.label}</button>
+            <button onClick={this.props.action} disabled={this.props.disabled}>{this.props.label}</button>
         )
     }
 }
